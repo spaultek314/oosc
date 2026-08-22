@@ -14,3 +14,11 @@ The platform implements:
 6. Failure classification for tool-call loops, hallucinated confidence, destructive actions, goal drift, timeout, and sandbox errors.
 7. Reliability scorecards and version regression detection.
 8. Browser dashboard and JSON REST API served by the same Spring Boot application.
+
+## Run
+
+```bash
+mvn spring-boot:run
+```
+
+Then open `http://localhost:8080/` in a browser.
