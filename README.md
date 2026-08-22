@@ -21,4 +21,3 @@ The platform implements:
 mvn spring-boot:run
 ```
 
-Then open `http://localhost:8080/` in a browser.
