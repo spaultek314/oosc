@@ -1,13 +1,13 @@
 # OOSC Task Contract
 
-- [x] Domain model and ports
-- [x] Scenario generation
-- [x] Sandboxed deterministic evaluation and replay
-- [x] Failure classification
-- [x] Reliability and regression reporting
-- [x] REST API
-- [x] Browser dashboard
-- [x] Unit tests
-- [x] GitHub Actions validation contract
+- [ ] Domain model and ports
+- [ ] Scenario generation
+- [ ] Sandboxed deterministic evaluation and replay
+- [ ] Failure classification
+- [ ] Reliability and regression reporting
+- [ ] REST API
+- [ ] Browser dashboard
+- [ ] Unit tests
+- [ ] GitHub Actions validation contract
 
-Completion status is released only after the CI `mvn -B verify` workflow passes.
+Tasks are checked only after the required CI validation exits with status 0.
