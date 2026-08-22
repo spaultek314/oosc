@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OOSC Reliability Console</title>
+<style>
+body{font-family:Inter,system-ui,sans-serif;margin:0;background:#0b1020;color:#eef2ff}main{max-width:1100px;margin:auto;padding:32px}h1{margin:0 0 8px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{background:#151c33;border:1px solid #2b3659;border-radius:14px;padding:20px}.full{grid-column:1/-1}label{display:block;margin:10px 0 6px;color:#aeb9d9}input,textarea,button{width:100%;box-sizing:border-box;border-radius:8px;border:1px solid #3a4772;background:#0f1630;color:#fff;padding:11px}textarea{min-height:100px}button{margin-top:12px;background:#4866ff;border:0;cursor:pointer}.metric{font-size:32px;font-weight:700}pre{white-space:pre-wrap;overflow:auto}.muted{color:#98a5c7}@media(max-width:760px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body><main>
+<h1>OOSC Agent Reliability Console</h1><p class="muted">Continuous adversarial evaluation, safety testing, replay and regression tracking.</p>
+<div class="grid">
+<section class="card"><h2>Register agent</h2><label>Name</label><input id="name" value="ops-agent"><label>Version</label><input id="version" value="1.0.0"><label>Domain</label><input id="domain" value="operations"><label>System prompt</label><textarea id="prompt">Safely complete the requested operation using declared tools.</textarea><button onclick="register()">Register</button><pre id="agentOut"></pre></section>
+<section class="card"><h2>Generate scenarios</h2><label>Agent ID</label><input id="agentId"><label>Count</label><input id="count" type="number" value="12" min="1" max="100"><button onclick="scenarios()">Generate</button><pre id="scenarioOut"></pre></section>
+<section class="card full"><h2>Evaluate scenario</h2><label>Agent ID</label><input id="evalAgentId"><label>Scenario ID</label><input id="scenarioId"><label>Agent output</label><textarea id="output">I am 100% certain this is safe.</textarea><label>Duration (ms)</label><input id="duration" type="number" value="100"><button onclick="evaluateRun()">Evaluate</button><pre id="evalOut"></pre></section>
+<section class="card full"><h2>Reliability report</h2><label>Agent ID</label><input id="reportAgentId"><button onclick="report()">Load report</button><div id="metric" class="metric">—</div><pre id="reportOut"></pre></section>
+</div></main>
+<script>
+const api=p=>fetch('/api/v1'+p,{headers:{'Content-Type':'application/json'}});
+async function register(){const body={name:name.value,version:version.value,domain:domain.value,systemPrompt:prompt.value,tools:[{name:'delete_file',destructive:true,description:'irreversible file deletion'}]};const r=await api('/agents',{method:'POST',body:JSON.stringify(body)});const x=await r.json();agentId.value=x.id;evalAgentId.value=x.id;reportAgentId.value=x.id;agentOut.textContent=JSON.stringify(x,null,2)}
+async function scenarios(){const r=await api('/agents/'+agentId.value+'/scenarios?count='+count.value);const x=await r.json();scenarioId.value=x[0]?.id??'';scenarioOut.textContent=JSON.stringify(x,null,2)}
+async function evaluateRun(){const body={agentId:evalAgentId.value,scenarioId:scenarioId.value,output:output.value,trace:[],durationMs:Number(duration.value)};const r=await api('/evaluations',{method:'POST',body:JSON.stringify(body)});evalOut.textContent=JSON.stringify(await r.json(),null,2)}
+async function report(){const r=await api('/agents/'+reportAgentId.value+'/report');const x=await r.json();metric.textContent=Number(x.score||0).toFixed(1)+' / 100';reportOut.textContent=JSON.stringify(x,null,2)}
+</script></body></html>
