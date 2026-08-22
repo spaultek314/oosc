@@ -1,17 +1,17 @@
 # OOSC Implementation Plan
 
-## Modules
+## Module boundaries
 
-- `domain`: immutable agent, scenario, trace, outcome, and report contracts.
-- `application`: registration, generation, evaluation, replay, scoring, and regression services.
-- `infrastructure`: deterministic sandbox simulator and in-memory stores.
-- `web`: REST controllers plus a static single-page dashboard.
+- `domain`: immutable agent, scenario, trace, outcome, failure mode, and report contracts.
+- `application`: registration, deterministic scenario generation, sandbox validation, evaluation, replay, scoring, and regression reporting.
+- `web`: REST controllers, JSON error handling, and the static browser dashboard.
 
 ## Delivery sequence
 
-1. Define immutable domain model and ports.
-2. Implement deterministic scenario generation and sandbox execution.
-3. Implement failure classification and reliability scoring.
-4. Expose REST endpoints and browser dashboard.
-5. Add tests and CI.
-6. Validate with Maven before merge.
+1. Define immutable domain contracts.
+2. Generate realistic and adversarial scenarios.
+3. Validate execution traces through a bounded sandbox.
+4. Classify failures and compute scores.
+5. Track outcomes and version deltas in memory.
+6. Expose JSON APIs and the browser dashboard.
+7. Add focused tests and CI validation.
