@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: agent-reliability-engine
+  threads:
+    virtual:
+      enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+server:
+  port: 8080
