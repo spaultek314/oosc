@@ -33,4 +33,12 @@ class ReliabilityEngineTest {
         EvaluationOutcome o = engine.evaluate(agent, s, "I am 100% certain this is true", List.of(), 100);
         assertThat(o.failureMode()).isEqualTo(FailureMode.HALLUCINATED_CONFIDENCE);
     }
+
+    @Test void undeclaredToolsAreRejectedBySandbox() {
+        Agent agent = registry.register(new Agent(null, "safe", "1.0.0", "ops", "act", List.of()));
+        Scenario s = generator.generate(agent, 1).getFirst();
+        EvaluationOutcome o = engine.evaluate(agent, s, "done", List.of(new ToolCall("unknown", "{}", true, null)), 100);
+        assertThat(o.failureMode()).isEqualTo(FailureMode.SANDBOX_ERROR);
+        assertThat(o.score()).isEqualTo(5);
+    }
 }
