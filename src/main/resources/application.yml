@@ -1,13 +1,21 @@
 spring:
   application:
-    name: agent-reliability-engine
+    name: oosc-agent-reliability
   threads:
     virtual:
       enabled: true
+  web:
+    resources:
+      cache:
+        period: 0
+server:
+  port: 8080
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics
-server:
-  port: 8080
+  endpoint:
+    health:
+      probes:
+        enabled: true

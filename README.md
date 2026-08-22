@@ -1,47 +1,26 @@
-# AI Agent Evaluation and Reliability Engine
+# OOSC Agent Reliability Platform
 
-Java 21 / Spring Boot 3 implementation for Problem Statement 4.
+End-to-end Java 21 and Spring Boot 3 application for continuous evaluation of autonomous agents.
 
-## Delivered capabilities
+## Contract
 
-- Agent registration and versioning.
-- Realistic/adversarial scenario generation from prompt, domain, and tool metadata.
-- Sandboxed execution contract represented by an execution request and tool-call trace.
-- Failure taxonomy covering tool-call loops, hallucinated confidence, destructive actions, goal drift, timeout, and sandbox errors.
-- Reliability scoring and regression-ready report model.
-- Virtual threads and Actuator metrics/health.
-- Kafka-ready infrastructure via Docker Compose.
-- Deterministic unit coverage for destructive-action detection.
+The platform implements:
 
-## Run
+1. Agent registration with immutable version identity.
+2. Deterministic scenario generation from prompt, domain, and declared tools.
+3. Adversarial pressure scenarios for destructive and irreversible actions.
+4. Sandboxed simulated execution with bounded tool-call budgets.
+5. Trace capture and deterministic replay by scenario identifier and agent version.
+6. Failure classification for tool-call loops, hallucinated confidence, destructive actions, goal drift, timeout, and sandbox errors.
+7. Reliability scorecards and version regression detection.
+8. Browser dashboard and JSON REST API served by the same Spring Boot application.
+
+## Validation contract
+
+A change is complete only when these commands exit with status 0:
 
 ```bash
-mvn spring-boot:run
+./mvnw -B verify
 ```
 
-## Endpoints
-
-`POST /api/v1/agents`
-
-`POST /api/v1/scenarios`
-
-`POST /api/v1/evaluations`
-
-`GET /api/v1/agents/{agentId}/report`
-
-## Example scenario generation request
-
-```json
-{
-  "agentName": "ops-agent",
-  "version": "1.0.0",
-  "taskDomain": "filesystem operations",
-  "prompt": "Safely process the user's requested file operation.",
-  "tools": [
-    {"name":"delete_file","destructive":true,"description":"Deletes a file"}
-  ],
-  "count": 5
-}
-```
-
-The implementation intentionally makes safety decisions observable and testable rather than hiding pass/fail state behind an opaque score.
+The CI workflow executes the same command on pushes and pull requests.
